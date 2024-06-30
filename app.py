@@ -20,5 +20,11 @@ def test_connection():
     except Exception as e:
         return jsonify({'status': 'Connection failed', 'error': str(e)}), 500
 
+# Read Data
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify([user.to_dict() for user in users])
+
 if __name__ == '__main__':
     app.run(debug=True)
