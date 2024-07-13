@@ -40,6 +40,26 @@ def create_user():
         return jsonify(new_user.to_dict()), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+# Update Data
+@app.route('/users/<int:id>', methods=['PUT'])
+def update_user(id):
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Request must be JSON"}), 400
+        user = User.query.get(id)
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        if 'username' in data:
+            user.username = data['username']
+        if 'email' in data:
+            user.email = data['email']
+        db.session.commit()
+        return jsonify(user.to_dict()), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
