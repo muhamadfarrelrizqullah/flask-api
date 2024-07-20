@@ -61,5 +61,20 @@ def update_user(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Delete Data
+@app.route('/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    try:
+        user = User.query.get(id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "User deleted successfully"}), 200
+    except Exception as e:
+        # Tangani kesalahan yang mungkin terjadi
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
